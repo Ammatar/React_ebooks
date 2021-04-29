@@ -1,12 +1,13 @@
-import HeaderSvg from '../img/header.svg';
+import HeaderSvg from '../img/header1.svg';
 const Header = () => {
   return (
     <>
       <img
         src={HeaderSvg}
         alt=""
-        height="150px"
-        style={{ paddingLeft: '20vw' }}
+        maxheight="120px"
+        width="40%"
+        style={{ paddingLeft: '27vw', marginBottom: '1vh', marginTop: '1vh' }}
       />
       <br />
     </>

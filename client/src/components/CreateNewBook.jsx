@@ -1,8 +1,11 @@
+import Input from '@material-ui/core/Input';
+import {useDispatch, useSelector} from 'react-redux'
 const CreateNewBook = () => {
+  const user = useSelector(state => state.user)
   return (
     <div className="main create">
-      Create new book form:
-      <form onSubmit={async (e) => {
+      Форма создания новой книги:
+      <form  className={"newBook"} onSubmit={async (e) => {
           e.preventDefault();
           const response = await fetch('http://localhost:3000/newBook', {
             method: "POST",
@@ -10,34 +13,34 @@ const CreateNewBook = () => {
             mode: 'cors',
             body: JSON.stringify({
               title: e.target.title.value ? e.target.title.value :"New Book",
-              author: e.target.author.value ? e.target.author.value : "My Name",
-              version: e.target.version.value ? e.target.version.value : 3,
+              author: user.authorname,
+              version: 3,
               lang: e.target.lang.value ? e.target.lang.value : "ru",
             })
           })
           const data = response.json()
-          console.log(e.target.title.value)
+          // console.log(e.target.title.value)
           }}>
         <label>
           Название: 
-          <input type="text" name="title" />
+          <Input type="text" name="title" fullWidth={true}/>
         </label>
-        <label>
+        {/* <label>
           Автор:
-          <input type="text" name="author" />
-        </label>
+          <Input type="text" name="author" fullWidth={true} />
+        </label> */}
         <label>
           Обложка:
-          <input type="file" name="cover" id="cover"/>
+          <Input type="file" name="cover" id="cover" fullWidth={true}/>
         </label>
-        <label>
-          filename:
+        {/* <label>
+          Имя файла:
           <input type="text" name="output"/>
-        </label>
-        <select name="version" id="">
+        </label> */}
+        {/* <select name="version" id="">
           <option value="3">EPUB ver.3</option>
           <option value="2">EPUB ver.2</option>
-        </select>
+        </select> */}
         {/* <label>
           CSS:
           <span>CSS modal</span>
@@ -47,7 +50,7 @@ const CreateNewBook = () => {
           <span>font modal</span>
         </label> */}
         <select name="lang" id="lang">
-          <option value="ru">Russian</option>
+          <option value="ru">Русский</option>
           <option value="en">English</option>
         </select>
 

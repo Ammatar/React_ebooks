@@ -1,7 +1,9 @@
 const initialState = {
   book: {},
   chapter: {},
-  allBooks: []
+  allBooks: [],
+  user: {},
+  publicBooks: [],
   // username: '',
   // topics: [],
   // questions: [],
@@ -34,16 +36,36 @@ export const setChapterThunk = ({id, data}) => {
     dispatch(getAllBooks())
   }
 }
-export const getAllBooks = () => {
+export const getAllBooks = (authorname) => {
   return async (dispatch) => {
     const response = await fetch('http://localhost:3000/getAllBooks', {
       method: "POST",
       headers: {"Content-Type" : "application/json"},
       mode: 'cors',
+      body: JSON.stringify({
+        authorname
+      })
     })
     const {allBooks} = await response.json()
-    console.log('get all books data =>', allBooks);
+    // console.log('get all books data =>', allBooks);
     dispatch({type: 'get_allBooks', payload: allBooks})
+    // setAllBooks(data)
+    // return data;
+  }
+}
+export const getAllPublic = () => {
+  return async (dispatch) => {
+    const response = await fetch('http://localhost:3000/getAllPublic', {
+      method: "POST",
+      headers: {"Content-Type" : "application/json"},
+      mode: 'cors',
+      body: JSON.stringify({
+        
+      })
+    })
+    const {getAllPublic} = await response.json()
+    // console.log('get all books data =>', allBooks);
+    dispatch({type: 'get_allPublic', payload: getAllPublic})
     // setAllBooks(data)
     // return data;
   }
@@ -51,10 +73,10 @@ export const getAllBooks = () => {
 export default function reducer(state = initialState, { type, payload }) {
   switch (type) {
     case 'SET_USER':
-      const username = payload;
+      // const username = payload;
       return {
         ...state,
-        username,
+        user: {...payload},
       };
     case 'LOGOUT':
       return initialState;
@@ -75,7 +97,11 @@ export default function reducer(state = initialState, { type, payload }) {
       return {...state.chapter};
     }
     case 'get_allBooks':
-      return {...state, allBooks: payload}
+      return {...state, allBooks: payload};
+    case 'get_allPublic':
+      return {
+        ...state, publicBooks: [...payload]
+      }
     default:
       return state;
   }

@@ -21,7 +21,7 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 400,
+    width: '60vw',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -33,7 +33,7 @@ export default function SimpleModal({ props }) {
   const dispatch = useDispatch();
   const bookState = useSelector((state) => state);
   const bookState_test = props;
-  console.log('prps in modal', props.el);
+  // console.log('prps in modal', props.el);
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -49,8 +49,8 @@ export default function SimpleModal({ props }) {
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
-      {console.log('bookstate', bookState_test)}
-      <BookEditForm props={bookState_test.el} />
+      {/* {console.log('bookstate', bookState_test)} */}
+      <BookEditForm props={bookState.book} />
       <span>{bookState.book.title}</span>
       <span>{bookState.book.author}</span>
       {/* <SimpleModal /> */}
@@ -62,13 +62,13 @@ export default function SimpleModal({ props }) {
       <button
         type="button"
         onClick={() => {
-          console.log('simple modal props', bookState);
-          // dispatch({type: 'set_book',payload: bookState.book})
+          // console.log('simple modal props', bookState);
+          dispatch({type: 'set_book',payload: bookState_test.el})
           // dispatch({type: 'set_chapter',payload: bookState.el})
           handleOpen();
         }}
       >
-        Edit Chapters
+        Редактировать
       </button>
       <button
         type="button"
@@ -90,11 +90,21 @@ export default function SimpleModal({ props }) {
           link.href = blobURL;
           link.download = 'file.epub';
           link.click();
-          console.log(blobURL);
+          // console.log(blobURL);
         }}
       >
-        export as Epub
+        экспортировать в Epub
       </button>
+      <button  onClick={ async () => {
+          const deleteBook = await fetch('http://localhost:3000/deleteBook', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: bookState_test.el._id,
+            })
+          })
+          // console.log(bookState_test.el._id);
+        }}>Удалить</button>
       <Modal
         open={open}
         onClose={handleClose}

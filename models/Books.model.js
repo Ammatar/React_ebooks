@@ -17,6 +17,8 @@ const Books = new mongoose.Schema({
   customHtmlTocTemplatePath: String,// Optional. For advanced customizations: absolute path to a HTML toc template.
   content:  [{title: String, author: String, data: String}], //[{type: mongoose.Schema.Types.ObjectId, ref: "Chapters"}], 
   verbose: Boolean,// specify whether or not to console.log progress messages, default: false.
+  public: Boolean,
+  // username: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
 module.exports = mongoose.model('Books', Books)

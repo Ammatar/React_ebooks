@@ -12,11 +12,11 @@ import 'tinymce/icons/default';
 import 'tinymce/skins/ui/oxide/skin.min.css';
 
 // importing the plugin js.
+import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/image';
-import 'tinymce/plugins/lists';
 import 'tinymce/plugins/charmap';
 import 'tinymce/plugins/hr';
 import 'tinymce/plugins/anchor';
@@ -45,13 +45,14 @@ export default function TinyEditorComponent({prop}) {
   // loading process and is instead loaded as a string via content_style
   const dispatch = useDispatch();
   const state = useSelector(state => state)
+  const user = useSelector(state => state.user)
   // const chap = dispatch(getChapterThunk());
   const [textValue, setTextValue] = useState('chap.data')
   // const [id, setId] = useState(chap.id)
   // const newId = chap.id
-  console.log('tiny props', state.chapter, prop.id);
+  // console.log('tiny props', state.chapter, prop.id);
   useEffect(() => {
-    dispatch(getAllBooks())
+    dispatch(getAllBooks(user.authorname))
   }, [state.allBooks]);
   // useEffect(() => {
   //   // setTextValue(prop.prop)
@@ -59,7 +60,7 @@ export default function TinyEditorComponent({prop}) {
   // }, [textValue]);
 
   const handleChange = () => {
-    console.log('==>', tinymce.activeEditor.getContent());
+    // console.log('==>', tinymce.activeEditor.getContent());
       setTextValue(tinymce.activeEditor.getContent())
       dispatch(setChapterThunk({id: prop.id, data: tinymce.activeEditor.getContent()}))
         // dispatch({type: 'set_chapter', payload: {id: id, data: textValue}})
@@ -71,8 +72,9 @@ export default function TinyEditorComponent({prop}) {
       initialValue={prop.prop}
       init={{
         height: '500px',
-        width: '50vw',
-        plugins:'lists code fullscreen',
+        width: '60vw',
+        plugins:'lists advlist autolink link hr code fullscreen table template',
+        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncentre alignright alignjustify | indent outdent | bullist numlist',
         skin: false,
         content_css: false,
         content_style: [contentCss, contentUiCss].join('\n'),

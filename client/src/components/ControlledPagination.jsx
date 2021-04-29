@@ -14,24 +14,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function PaginationControlled({props}) {
   const dispatch = useDispatch()
-  console.log('props =>',props);
+  // console.log('props =>',props);
+  const book = useSelector(state => state.book)
   const classes = useStyles();
   const [page, setPage] = React.useState(1);
   const [prop, setProp] = React.useState('');
   const [id, setId] = React.useState('')
   const [textValue, setTextValue] = React.useState(prop)
   React.useEffect(() => {
-    setProp(props[0].data)
-    setId(props[0]._id)
+    setProp(book.content[0].data)
+    setId(book.content[0]._id)
     // dispatch({type: 'set_chapter', payload: {id: props[0]._id, data: props[0].data}})
   }, [])
   const handleChange = (event, value) => {
     
     setPage(value);
-    setProp(props[value - 1].data)
-    setTextValue(props[value - 1].data)
-    setId(props[value - 1]._id)
-    dispatch({type: 'set_chapter', payload: {id: props._id, data: textValue}})
+    setProp(book.content[value - 1].data)
+    setTextValue(book.content[value - 1].data)
+    setId(book.content[value - 1]._id)
+    dispatch({type: 'set_chapter', payload: {id: book.content[value - 1]._id, data: textValue}})
     // const seeHidden = dispatch({type: 'get_chapter'})
     // console.log('see hidden', textValue);
   };
@@ -39,8 +40,9 @@ export default function PaginationControlled({props}) {
   return (
     <div className={classes.root}>
       <TinyEditorComponent prop={{prop, id}}/>
-      <Typography>Page: {page}</Typography>
-      <Pagination count={props.length} page={page} onChange={handleChange} />
+      <Typography>Глава: {page}</Typography>
+      <Pagination count={book.content.length} page={page} onChange={handleChange} />
+      Сохранить!
     </div>
   );
 }

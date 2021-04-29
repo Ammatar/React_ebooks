@@ -62,3 +62,17 @@ height: 15vh;
   flex-direction: column;
   border: 1px dotted black;
 }
+.books {
+
+}
+.newBook {
+  display: flex;
+  flex-direction: column;
+}
+
+.newBook *{
+  margin: 5px;
+}
+.menuBlock {
+  padding-top: 20vh;
+}

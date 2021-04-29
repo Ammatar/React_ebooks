@@ -3,35 +3,16 @@ const { Books, Chapters, User } = require('../models/index.model');
 const cors = require('cors');
 const Epub = require('epub-gen');
 const path = require('path');
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 router.get('/', (req, res) => {
-  res.send({ status: 'ok' });
+  res.send(req.user)
 });
 
 router.post('/newBook', async (req, res) => {
   const options = await req.body;
   console.log(req.body);
-  // const {
-  //   title,
-  //   author,
-  //   publisher,
-  //   cover,
-  //   output,
-  //   version,
-  //   css,
-  //   fonts,
-  //   lang,
-  //   tocTitle,
-  //   appendChapterTitles,
-  //   customOpfTemplatePath,
-  //   customNcxTocTemplatePath,
-  //   customHtmlTocTemplatePath,
-  //   content,
-  //   verbose
-  // } = req.body;
-  // const chapter = await Chapters.create({
-  //   data: "<div> Chapter </div>"
-  // })
   const newBook = await Books.create({
     title: options.title,
     author: options.author,
@@ -49,12 +30,15 @@ router.post('/newBook', async (req, res) => {
     // customHtmlTocTemplatePath,
     content: [{ data: '<div> Chapter </div>' }],
     // verbose
+    public: false,
+    username: '',
   });
   res.send({ status: 'created' });
 });
 
 router.post('/getAllBooks', async (req, res) => {
-  const allBooks = await Books.find();
+  // const author = await User.findOne({authorname: req.body.authorname})
+  const allBooks = await Books.find({author: req.body.authorname});
   // console.log(allBooks);
   res.json({ allBooks });
 });
@@ -64,16 +48,27 @@ router.post('/editBook', (req, res) => {
 
   res.send();
 });
+router.post('/getAllPublic', async (req, res) => {
+  const getAllPublic = await Books.find({public: true})
+  res.json({getAllPublic})
+});
+
 router.post('/addChapter', async (req, res) => {
   const { id } = req.body;
   const book = await Books.findOne({ _id: id });
-  book.content.push({ data: '<div> New Chapter </div>' });
+  book.content.push({ title: `${book.content.length}`, data: '<div> New Chapter </div>' });
   // const newChapter = await Chapters.create({data: "<div> New Chapter </div>"})
   console.log(book.content);
   // book.content = [...book.content, newChapter._id];
   book.save();
   // console.log(newChapter);
 });
+
+router.post('/deleteBook', async (req,res) => {
+  const {id} = req.body;
+  const book = await Books.findOneAndDelete({_id:id})
+  console.log(book);
+})
 router.post('/chapterEdit', async (req, res) => {
   const { id, data } = req.body;
   console.log(req.body);
@@ -108,4 +103,49 @@ router.post('/export', async (req, res) => {
   console.log(path.join(__dirname + '/output/path.epub'));
   res.sendFile(path.join(__dirname + '/output/', 'path.epub'));
 });
+
+router.post('/login', (req, res, next) => {
+  console.log(req.body);
+  passport.authenticate("local", (err, user, info) => {
+    if(err) throw err;
+    if(!user) res.send('No user with this credentials')
+    else {
+      req.logIn(user, err => {
+        if(err) throw err;
+        req.session.username = req.user;
+        res.send(req.user)
+        console.log('Login: ', req.user);
+      })
+    }
+  })(req, res, next)
+});
+router.post('/register', (req, res) => {
+  console.log(req.body);
+  User.findOne({username: req.body.username}, async (err, doc) => {
+    if(err) throw err;
+    if(doc) {res.send('User already exists')};
+    if(!doc) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+      const newUser = new User({
+        username: req.body.username,
+        authorname: req.body.authorname,
+        password: hashedPassword,
+      })
+      await newUser.save()
+      res.send({status: 'ok'})
+    }
+  })
+});
+
+router.get('/logoff', (req, res) => {
+  req.session.destroy()
+  req.user = false
+})
+
+router.post('/user', (req, res) => {
+  console.log('=>', req.user);
+  res.send(req.session.username)
+})
+
 module.exports = router;

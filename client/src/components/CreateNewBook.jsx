@@ -19,6 +19,7 @@ const CreateNewBook = () => {
             })
           })
           const data = response.json()
+          window.location = '/'
           // console.log(e.target.title.value)
           }}>
         <label>

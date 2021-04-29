@@ -97,8 +97,6 @@ export default function VerticalTabs() {
   }
   useEffect( () => {
    getUser()
-   
-   
   }, []);
   return (
     <div className={classes.root}>
@@ -121,11 +119,6 @@ export default function VerticalTabs() {
         {user && user.username ? <Tab label="Профиль" {...a11yProps(2)} />
         : <Tab label="Вход" {...a11yProps(2)} />
         }
-
-        {/* <Tab label="Вход" {...a11yProps(3)} /> */}
-        {/* <span className="block">
-          
-        </span> */}
         <Tab label="Библиотека" {...a11yProps(3)} onClick={() => {
           // <-------------------------------------------------------- get public books
           dispatch(getAllPublic())
@@ -163,17 +156,20 @@ export default function VerticalTabs() {
       {user && user.username ?
       <TabPanel value={value} index={2}>
       Профиль:
-      <div>{user ? user.authorname : null}</div>
-      <div>{user ? user.username : null}</div>
+      <div> Имя Автора: {user ? user.authorname : null}</div>
+      <div> Имя Пользователя: {user ? user.username : null}</div>
       <button onClick={async () => {
         
         const logoff = await fetch('http://localhost:3000/logoff', {
-          method: "GET",
+          method: "POST",
           credentials: 'include',
           headers: {"Content-Type": "application/json"},
           
-        }).then(res => dispatch({type: 'SET_USER', payload: {username: res}} ))
-        
+        })
+        const logoffData = await logoff.json()
+        dispatch({type: 'SET_USER', payload: {username: logoffData}} )
+        console.log(logoffData);
+        window.location = '/'
       }}>Выход</button>
       </TabPanel>:
       <>
@@ -217,6 +213,7 @@ export default function VerticalTabs() {
           setUser({username: responseData.username, authorname: responseData.authorname})
           dispatch({type: "SET_USER", payload: {username: responseData.username, authorname: responseData.authorname}})
           console.log('Login response', responseData);
+          window.location = '/'
         } 
         }>
               Имя пользователя: <Input type="text" name="username" fullWidth={true}/>
@@ -230,9 +227,9 @@ export default function VerticalTabs() {
       {/* -------------------------------------------- TABS PANEL
       ------------------------------------------------LOGIN & PROFILE END----------------------------- */}
       <TabPanel value={value} index={3}>
-        <div>Item Five</div> 
+        <div>Библиотека: </div> 
         {publicBooks ? publicBooks.map((el) => {
-          return <div>
+          return <div key={Math.random()}>
             {el.title}
           </div>
 

@@ -56,7 +56,7 @@ router.post('/getAllPublic', async (req, res) => {
 router.post('/addChapter', async (req, res) => {
   const { id } = req.body;
   const book = await Books.findOne({ _id: id });
-  book.content.push({ title: `${book.content.length}`, data: '<div> New Chapter </div>' });
+  book.content.push({ title: `Глава ${book.content.length}`, data: '<div> Новая глава </div>' });
   // const newChapter = await Chapters.create({data: "<div> New Chapter </div>"})
   console.log(book.content);
   // book.content = [...book.content, newChapter._id];
@@ -68,6 +68,7 @@ router.post('/deleteBook', async (req,res) => {
   const {id} = req.body;
   const book = await Books.findOneAndDelete({_id:id})
   console.log(book);
+  res.send({status: 'deleted'})
 })
 router.post('/chapterEdit', async (req, res) => {
   const { id, data } = req.body;
@@ -138,9 +139,10 @@ router.post('/register', (req, res) => {
   })
 });
 
-router.get('/logoff', (req, res) => {
+router.post('/logoff', (req, res) => {
   req.session.destroy()
   req.user = false
+  res.send({status: 'ok'})
 })
 
 router.post('/user', (req, res) => {

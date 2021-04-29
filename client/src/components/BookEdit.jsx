@@ -103,6 +103,8 @@ export default function SimpleModal({ props }) {
               id: bookState_test.el._id,
             })
           })
+          const deleteBookData = await deleteBook.json()
+          window.location = '/'
           // console.log(bookState_test.el._id);
         }}>Удалить</button>
       <Modal

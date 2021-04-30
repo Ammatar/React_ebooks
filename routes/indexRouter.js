@@ -28,7 +28,7 @@ router.post('/newBook', async (req, res) => {
     // customOpfTemplatePath,
     // customNcxTocTemplatePath,
     // customHtmlTocTemplatePath,
-    content: [{ data: '<div> Chapter </div>' }],
+    content: [{ title: 'Введение', data: '<div> Введение </div>' }],
     // verbose
     public: false,
     username: '',
@@ -61,6 +61,7 @@ router.post('/addChapter', async (req, res) => {
   console.log(book.content);
   // book.content = [...book.content, newChapter._id];
   book.save();
+  res.send({book})
   // console.log(newChapter);
 });
 

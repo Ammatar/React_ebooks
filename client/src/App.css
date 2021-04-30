@@ -76,3 +76,10 @@ height: 15vh;
 .menuBlock {
   padding-top: 20vh;
 }
+.biblio {
+  width: 82vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}

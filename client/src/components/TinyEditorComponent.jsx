@@ -48,23 +48,15 @@ export default function TinyEditorComponent({prop}) {
   const user = useSelector(state => state.user)
   // const chap = dispatch(getChapterThunk());
   const [textValue, setTextValue] = useState('chap.data')
-  // const [id, setId] = useState(chap.id)
-  // const newId = chap.id
-  // console.log('tiny props', state.chapter, prop.id);
+
   useEffect(() => {
     dispatch(getAllBooks(user.authorname))
   }, [state.allBooks]);
-  // useEffect(() => {
-  //   // setTextValue(prop.prop)
-  //   console.log(textValue);
-  // }, [textValue]);
 
   const handleChange = () => {
     // console.log('==>', tinymce.activeEditor.getContent());
       setTextValue(tinymce.activeEditor.getContent())
       dispatch(setChapterThunk({id: prop.id, data: tinymce.activeEditor.getContent()}))
-        // dispatch({type: 'set_chapter', payload: {id: id, data: textValue}})
-        // dispatch(getAllBooks())
   }
   
   return (

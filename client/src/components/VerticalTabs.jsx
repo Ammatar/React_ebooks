@@ -5,13 +5,15 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
 import Input from '@material-ui/core/Input';
+import Button from '@material-ui/core/Button';
 import Card from './Card';
 import CreateNewBook from './CreateNewBook';
-// import BookEdit from './BookEdit';
+import PublicCard from './PublicCard'
+
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBooks, getAllPublic } from '../redux/reducer';
+import TransitionsModal from './TransitionsModal';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,18 +51,16 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    // backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.paper,
     display: 'flex',
-    height: '60vh',
+    // width: '82vw',
+    minHeight: '60vh',
     border: '1px dotted black',
     backgroundColor: '#f0f8fa',
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
   },
-  reglog: {
-    width: '500px'
-  }
 }));
 
 export default function VerticalTabs() {
@@ -116,7 +116,7 @@ export default function VerticalTabs() {
         />
         <Tab label="Создать новую" {...a11yProps(1)} />
 
-        {user && user.username ? <Tab label="Профиль" {...a11yProps(2)} />
+        {loggedUser && loggedUser.username ? <Tab label="Профиль" {...a11yProps(2)} />
         : <Tab label="Вход" {...a11yProps(2)} />
         }
         <Tab label="Библиотека" {...a11yProps(3)} onClick={() => {
@@ -131,7 +131,7 @@ export default function VerticalTabs() {
        {/* ------------------------------------- TAB PANELS --------------------------------------------------- */}
       <TabPanel value={value} index={0}>
       Книги:
-        <div className="books">
+        <div className="biblio">
           {allBooks
             ? allBooks.map((el) => {
                 return (
@@ -148,17 +148,21 @@ export default function VerticalTabs() {
         
       </TabPanel>
       <TabPanel value={value} index={1}>
-      {user && user.username ?
+      {loggedUser && loggedUser.username ?
         <CreateNewBook /> : null}
       </TabPanel>
       {/* -------------------------------------------- TABS PANEL
       ------------------------------------------------LOGIN & PROFILE ----------------------------- */}
-      {user && user.username ?
+      {loggedUser && loggedUser.username ?
       <TabPanel value={value} index={2}>
+      <div className="biblio">
+        <div>
       Профиль:
       <div> Имя Автора: {user ? user.authorname : null}</div>
       <div> Имя Пользователя: {user ? user.username : null}</div>
-      <button onClick={async () => {
+      <Button variant="contained"
+          size="small"
+          onClick={async () => {
         
         const logoff = await fetch('http://localhost:3000/logoff', {
           method: "POST",
@@ -170,34 +174,15 @@ export default function VerticalTabs() {
         dispatch({type: 'SET_USER', payload: {username: logoffData}} )
         console.log(logoffData);
         window.location = '/'
-      }}>Выход</button>
+      }}>Выход</Button>
+      </div>
+      </div>
       </TabPanel>:
-      <>
+      <div>
       <TabPanel value={value} index={2}>
-        <form className="main create newBook" style={{width: "500px", justifyContent: "center", alignSelf: "center"}} onSubmit={ async (e) => {
-          e.preventDefault()
-          const response = await fetch('http://localhost:3000/register', {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            credentials: 'include',
-            body: JSON.stringify({
-              username: e.target.username.value,
-              authorname: e.target.authorname.value,
-              password: e.target.password.value,
-            })
-          })
-        } 
-        }>
-              Имя пользователя: <Input type="text" name="username" autoFocus={true} fullWidth={true}/>
-              <br/>
-              Имя Автора (Будет отображаться в поле автор при создании книг): <Input type="text" name="authorname" fullWidth={true}/>
-              <br/>
-              Пароль: <Input type="password" name="password" fullWidth={true}/>
-              <br/>
-              <button>Регистрация</button>
-        </form>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
+        <div className="biblio">
+
+       
       <form method="post" className="main create" style={{width: "500px", justifyContent: "center", alignSelf: "center"}} onSubmit={ async (e) => {
           e.preventDefault()
           const response = await fetch('http://localhost:3000/login', {
@@ -220,20 +205,25 @@ export default function VerticalTabs() {
               <br/>
               Пароль: <Input type="password" name="password" fullWidth={true}/>
               <br/>
-              <button>Вход</button>
+              <Button type="submit" variant="contained"
+          size="small">Вход</Button><TransitionsModal/>
         </form>
-      </TabPanel> </>
+        </div>
+      </TabPanel>
+       </div>
       }
       {/* -------------------------------------------- TABS PANEL
       ------------------------------------------------LOGIN & PROFILE END----------------------------- */}
       <TabPanel value={value} index={3}>
+        <>
         <div>Библиотека: </div> 
+        <div className="biblio">
         {publicBooks ? publicBooks.map((el) => {
-          return <div key={Math.random()}>
-            {el.title}
-          </div>
-
+          return <PublicCard props={el} key={Math.random() }/>
+          
         }): null}
+        </div>
+        </>
       </TabPanel>
       <TabPanel value={value} index={6}>
         Item Six

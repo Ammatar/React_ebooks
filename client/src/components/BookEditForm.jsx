@@ -1,13 +1,16 @@
 import {useState} from 'react'
-import Chapter from './Chapter';
+import { Button } from '@material-ui/core';
 import ControlledPagination from './ControlledPagination'
 import {useDispatch, useSelector} from 'react-redux'
+import { getAllBooks, getAllPublic } from '../redux/reducer';
 
 const BookEditForm = ({props}) => {
-  let book = useSelector(state => state.book)
+  const dispatch = useDispatch();
+  let book = useSelector(state => state.book);
   const [title, setTitle] = useState(book.title);
   const [author, setAuthor] = useState(book.author);
   const [content, setContent] = useState(book.content)
+  
   // console.log({props});
   return ( 
     <>
@@ -20,7 +23,10 @@ const BookEditForm = ({props}) => {
       }): null} */}
       <ControlledPagination props={content}/>
     </form>
-      <input type="button" value="add Chapter" onClick={async (e) => {
+      <Button 
+      variant="contained"
+      size="small"
+      type="button" value="add Chapter" onClick={async (e) => {
         // console.log(e.target);
         const response = await fetch('http://localhost:3000/addChapter', {
           method: "POST",
@@ -29,8 +35,11 @@ const BookEditForm = ({props}) => {
             id: props._id
           })
         })
-        const data = await response.json()
-      }}/>
+        const {book} = await response.json()
+
+        
+        dispatch({type: 'set_book',payload: book})
+      }}>Добавить главу</Button>
       </>
    );
 }

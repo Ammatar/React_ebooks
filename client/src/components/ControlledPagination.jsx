@@ -42,7 +42,6 @@ export default function PaginationControlled({props}) {
       <TinyEditorComponent prop={{prop, id}}/>
       <Typography>Глава: {page}</Typography>
       <Pagination count={book.content.length} page={page} onChange={handleChange} />
-      Сохранить!
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
+import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import BookEditForm from './BookEditForm';
 function rand() {
@@ -8,8 +9,8 @@ function rand() {
 }
 
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  const top = 50;
+  const left = 50;
 
   return {
     top: `${top}%`,
@@ -39,6 +40,8 @@ export default function SimpleModal({ props }) {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
+  React.useEffect(() => {}, []);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -51,26 +54,30 @@ export default function SimpleModal({ props }) {
     <div style={modalStyle} className={classes.paper}>
       {/* {console.log('bookstate', bookState_test)} */}
       <BookEditForm props={bookState.book} />
-      <span>{bookState.book.title}</span>
-      <span>{bookState.book.author}</span>
+      {/* <span>{bookState.book.title}</span>
+      <span>{bookState.book.author}</span> */}
       {/* <SimpleModal /> */}
     </div>
   );
 
   return (
     <div>
-      <button
+      <Button
+        variant="contained"
+        size="small"
         type="button"
         onClick={() => {
           // console.log('simple modal props', bookState);
-          dispatch({type: 'set_book',payload: bookState_test.el})
+          dispatch({ type: 'set_book', payload: bookState_test.el });
           // dispatch({type: 'set_chapter',payload: bookState.el})
           handleOpen();
         }}
       >
         Редактировать
-      </button>
-      <button
+      </Button>
+      <Button
+        variant="contained"
+        size="small"
         type="button"
         onClick={async () => {
           const { title, author, content, lang } = props.el;
@@ -94,19 +101,25 @@ export default function SimpleModal({ props }) {
         }}
       >
         экспортировать в Epub
-      </button>
-      <button  onClick={ async () => {
+      </Button>
+      <Button
+        variant="contained"
+        size="small"
+        onClick={async () => {
           const deleteBook = await fetch('http://localhost:3000/deleteBook', {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               id: bookState_test.el._id,
-            })
-          })
-          const deleteBookData = await deleteBook.json()
-          window.location = '/'
+            }),
+          });
+          const deleteBookData = await deleteBook.json();
+          window.location = '/';
           // console.log(bookState_test.el._id);
-        }}>Удалить</button>
+        }}
+      >
+        Удалить
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}

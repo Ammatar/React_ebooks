@@ -1,39 +1,43 @@
+import { Button } from '@material-ui/core';
 import Input from '@material-ui/core/Input';
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 const CreateNewBook = () => {
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user);
   return (
     <div className="main create">
       Форма создания новой книги:
-      <form  className={"newBook"} onSubmit={async (e) => {
+      <form
+        className={'newBook'}
+        onSubmit={async (e) => {
           e.preventDefault();
           const response = await fetch('http://localhost:3000/newBook', {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             mode: 'cors',
             body: JSON.stringify({
-              title: e.target.title.value ? e.target.title.value :"New Book",
+              title: e.target.title.value ? e.target.title.value : 'New Book',
               author: user.authorname,
               version: 3,
-              lang: e.target.lang.value ? e.target.lang.value : "ru",
-            })
-          })
-          const data = response.json()
-          window.location = '/'
+              lang: e.target.lang.value ? e.target.lang.value : 'ru',
+            }),
+          });
+          const data = response.json();
+          window.location = '/';
           // console.log(e.target.title.value)
-          }}>
+        }}
+      >
         <label>
-          Название: 
-          <Input type="text" name="title" fullWidth={true}/>
+          Название:
+          <Input type="text" name="title" fullWidth={true} />
         </label>
         {/* <label>
           Автор:
           <Input type="text" name="author" fullWidth={true} />
         </label> */}
-        <label>
+        {/* <label>
           Обложка:
           <Input type="file" name="cover" id="cover" fullWidth={true}/>
-        </label>
+        </label> */}
         {/* <label>
           Имя файла:
           <input type="text" name="output"/>
@@ -58,7 +62,14 @@ const CreateNewBook = () => {
         {/* <select placeholder="Жанр">
           <option value="Стихи">Стихи</option>
         </select> */}
-        <input type="submit" value="Отправить" />
+        <Button
+          variant="contained"
+          size="small"
+          type="submit"
+          value="Отправить"
+        >
+          Отправить
+        </Button>
       </form>
     </div>
   );

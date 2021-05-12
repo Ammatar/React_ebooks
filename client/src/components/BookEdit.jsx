@@ -66,6 +66,7 @@ export default function SimpleModal({ props }) {
         variant="contained"
         size="small"
         type="button"
+        
         onClick={() => {
           // console.log('simple modal props', bookState);
           dispatch({ type: 'set_book', payload: bookState_test.el });
@@ -75,10 +76,12 @@ export default function SimpleModal({ props }) {
       >
         Редактировать
       </Button>
+      <div className='buttonSeparator'></div>
       <Button
         variant="contained"
         size="small"
         type="button"
+        className='button'
         onClick={async () => {
           const { title, author, content, lang } = props.el;
           const response = await fetch('http://localhost:3000/export', {
@@ -102,6 +105,7 @@ export default function SimpleModal({ props }) {
       >
         экспортировать в Epub
       </Button>
+      <div className='buttonSeparator'></div>
       <Button
         variant="contained"
         size="small"

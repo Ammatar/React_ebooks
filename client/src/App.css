@@ -83,3 +83,12 @@ height: 15vh;
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.ads {
+  width: 300px;
+  height: 120px;
+  border: 1px dotted black;
+}
+.buttonSeparator {
+  height: 5px;
+}
